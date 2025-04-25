@@ -2158,10 +2158,11 @@ public final class ResourceManager extends InterfaceBWebsideController {
 
     public String validateUserCredentials(String userid, String password, boolean admin) {
         String result = "<success/>";
+        String encryptedPassword = PasswordEncryptor.encrypt(password, "");
         if (userid.equals(ADMIN_STR)) {
             String adminPassword = _services.getAdminUserPassword();
             if (successful(adminPassword)) {
-                if (!password.equals(adminPassword)) {
+                if (!encryptedPassword.equals(adminPassword)) {
                     result = fail(INVALID_LOGON_ERR);
                 }
             }
@@ -2180,7 +2181,7 @@ public final class ResourceManager extends InterfaceBWebsideController {
                     }
                 }
                 else {
-                    validPassword = p.isValidPassword(password);
+                    validPassword = p.isValidPassword(encryptedPassword);
                 }
                 if (validPassword) {
                     if (admin && !p.isAdministrator()) {
